@@ -4,11 +4,15 @@ const app = express();
 const db = require('./db');
 require('dotenv').config();
 
+const passport = require('./auth');
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
+app.use(passport.initialize());
+
+const localAuthMiddleware = passport.authenticate('local', {session: false});
+app.get('/', localAuthMiddleware, (req, res) => {
     res.send("Website Khul Gyi");
 });
 
